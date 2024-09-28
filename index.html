@@ -79,7 +79,9 @@
             fetch("https://api.github.com/repos/<username>/<repo>/issues", {
                 method: "POST",
                 headers: {
-                    "Authorization": "Bearer <token>"
+                    "Authorization": "token <token>",  // 使用个人访问令牌
+                    "Accept": "application/vnd.github.v3+json",
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     title: `报名: ${name}`,
