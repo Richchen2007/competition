@@ -1,63 +1,45 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
 
-const app = express();
-const port = 5001;
+h1 {
+    color: #333;
+}
 
-// MongoDB Atlas 连接字符串
-const dbUri = 'your_mongodb_atlas_connection_string';  // 替换为你的 MongoDB Atlas 连接字符串
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-// 连接到 MongoDB
-mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((err) => {
-    console.error('Error connecting to MongoDB:', err);
-  });
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
 
-// 创建一个用户模型
-const User = mongoose.model('User', new mongoose.Schema({
-  name: String,
-  email: String,
-}));
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
 
-// 使用中间件
-app.use(bodyParser.json());
-app.use(express.static('public'));  // 允许 public 文件夹中的文件被访问
+input[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
 
-// POST 路由，处理表单提交
-app.post('/signup', (req, res) => {
-  const { name, email } = req.body;
-
-  // 创建一个新的用户对象并保存到数据库
-  const newUser = new User({ name, email });
-
-  newUser.save()
-    .then(() => {
-      console.log(`New signup: Name - ${name}, Email - ${email}`);
-      res.json({ message: 'Thank you for signing up!' });
-    })
-    .catch((err) => {
-      console.error('Error saving to database:', err);
-      res.status(500).json({ message: 'Error saving data' });
-    });
-});
-
-// GET 路由，查看所有报名人员
-app.get('/view-signups', (req, res) => {
-  User.find()
-    .then((users) => {
-      res.json({ users });
-    })
-    .catch((err) => {
-      console.error('Error retrieving users:', err);
-      res.status(500).json({ message: 'Error retrieving data' });
-    });
-});
-
-// 启动服务器
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+input[type="submit"]:hover {
+    background-color: #218838;
+}
