@@ -1,76 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    input[type="text"], input[type="email"], button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #218838;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>报名网站</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Sign Up</h1>
-    <form id="signupForm">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required>
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
-      <button type="submit">Sign Up</button>
-    </form>
-  </div>
 
-  <script>
-    document.getElementById('signupForm').addEventListener('submit', function(event) {
-      event.preventDefault();
+    <div class="container">
+        <h1>报名参加活动</h1>
+        <form id="signup-form">
+            <div class="form-group">
+                <label for="name">姓名:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">邮箱:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <button type="submit">提交报名</button>
+        </form>
+        <div id="response-message"></div>
+    </div>
 
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
+    <script>
+        document.getElementById("signup-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
 
-      fetch('/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email }),
-      })
-      .then(response => response.json())
-      .then(data => {
-        alert('Sign up successful: ' + data.message);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    });
-  </script>
+            // 收集报名数据
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("email", email);
+
+            // 发送数据到服务器
+            fetch("https://api.github.com/repos/<username>/<repo>/issues", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer <token>"
+                },
+                body: JSON.stringify({
+                    title: `报名: ${name}`,
+                    body: `姓名: ${name}\n邮箱: ${email}`,
+                    labels: ["报名"]
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response-message").innerText = "报名成功！";
+                document.getElementById("signup-form").reset();
+            })
+            .catch(error => {
+                document.getElementById("response-message").innerText = "提交失败，请重试。";
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
 </body>
 </html>
